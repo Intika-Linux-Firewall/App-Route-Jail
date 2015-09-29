@@ -3,6 +3,8 @@
 #include <unistd.h>
 
 /*
+    Compile
+    gcc -D_GNU_SOURCE -o newns ./newns.c
 
     Use this program to force specific resolv.conf for a program
     
