@@ -17,6 +17,49 @@ this will launch wget with default gateway set to `192.168.2.1` and default name
 Compilation instructions are inside the sources.
 OpenWrt package makefile included.
 
+# Force an application to use a specific network interface 
+
+We need to find what gateway the network interface is using then force that gateway to our jailed application 
+
+- Find the interface gateway (there are many solution to find the gateway here are some command that permit to find the used gateway)
+
+```
+$ route
+$ route -n
+$ ip rule list
+$ ip route show
+$ netstat -rn
+$ cat /etc/network/interfaces
+$ cat /etc/sysconfig/network-scripts/ifcfg-eth0
+$ traceroute www.google.com
+$ ip route show 0.0.0.0/0 dev eth0
+```
+
 # Per application gateway
 
+- Build Approute-Utils
 
+```
+git clone https://github.com/Intika-Linux-Network/Approute-Utils.git
+cd Approute-Utils
+chown 755 make.sh
+./make.sh
+```
+- Add a route for the future marked packets (will belong to the jailed application) in the example `192.168.1.1` is used as the forced gateway, those routes wont affect other applications, this manipulation have to be done only once at the system boot for instance
+
+```
+ip rule add fwmark 10 table 100
+ip route add default via 192.168.1.1 table 100
+```
+
+- Start the application that you want to jail
+
+```
+MARK=10 LD_PRELOAD=./mark.so firefox
+```
+
+- Testing the wan ip address 
+
+```
+MARK=10 LD_PRELOAD=./mark.so wget -qO- ifconfig.me
+```
