@@ -63,3 +63,7 @@ MARK=10 LD_PRELOAD=./mark.so firefox
 ```
 MARK=10 LD_PRELOAD=./mark.so wget -qO- ifconfig.me
 ```
+
+# Note 
+
+This application require root or SO_MARK capabilities http://man7.org/linux/man-pages/man7/capabilities.7.html
